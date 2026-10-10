@@ -105,6 +105,14 @@ def run_experiment(config: ValidationConfig, output_dir: Path) -> None:
 
 
 def run(output_root: Path, distributions: list[str], seed: int) -> None:
+    legacy_csv_names = (
+        "dp_bbs_in_batches.csv", "dp_bbs_in_machines.csv",
+        "dp_lpt_in_batches.csv", "dp_lpt_in_machines.csv",
+        "lpt_dp_in_batches.csv", "lpt_dp_in_machines.csv",
+        "validation_summary.csv",
+    )
+    for name in legacy_csv_names:
+        (output_root / name).unlink(missing_ok=True)
     for distribution in distributions:
         run_experiment(make_config(distribution, seed), output_root / distribution)
 
