@@ -7,6 +7,7 @@ from time import perf_counter
 
 from algorithms import solve_dp_bbs_in, solve_dp_lpt_in, solve_lpt_dp_in
 from config import DEFAULT_SEED, ValidationConfig, make_config
+from excel_writer import write_excel_workbook
 from fixed_instance import (
     build_fixed_instance,
     validate_instance,
@@ -89,9 +90,12 @@ def run_experiment(config: ValidationConfig, output_dir: Path) -> None:
     with (output_dir / "reference_lower_bound.json").open("w", encoding="utf-8") as f:
         json.dump(reference_payload, f, ensure_ascii=False, indent=2)
 
+    workbook_path = write_excel_workbook(output_dir, data_dir / "types.csv")
+
     print(f"{config.distribution.capitalize()} validation instance completed (seed={config.seed}).")
     print(f"Reference single-machine DP = {reference_dp.objective:.6f}")
     print(f"LB = max(C_DP/m, q_max) = {lb:.6f}")
+    print(f"Excel workbook = {workbook_path}")
     for row in summary_rows:
         print(
             f"{row['algorithm']:11s}  Cmax={row['makespan']:.6f}  "
