@@ -1,0 +1,49 @@
+Fixed validation run
+====================
+
+Parameters
+----------
+n = 10000
+m = 4
+b = 5
+alpha = 0.2
+beta = 1.2
+
+Reference
+---------
+Single-machine exact DP = 14198.272000
+q_max = 9.430000
+LB = max(C_DP / m, q_max) = 3549.568000
+
+Approximation algorithms
+------------------------
+DP-LPT-IN
+  Cmax = 5407.200000
+  LB gap = 52.334031%
+  Runtime = 0.164926 s (machine-dependent timing)
+  Machine loads = [5407.200000, 4345.600000, 3004.000000, 1441.472000]
+  Total batches = 11
+  Validation = PASS
+
+LPT-DP-IN
+  Cmax = 3582.016000
+  LB gap = 0.914139%
+  Runtime = 0.107161 s (machine-dependent timing)
+  Machine loads = [3582.016000, 3582.016000, 3582.016000, 3582.016000]
+  Total batches = 28
+  Validation = PASS
+
+DP-BBS-IN
+  Cmax = 4792.648000
+  LB gap = 35.020600%
+  Runtime = 0.142690 s (machine-dependent timing)
+  Machine loads = [4792.480000, 4792.648000, 4625.944000, 0.000000]
+  Total batches = 13
+  Nontrivial splits = 2
+  Validation = PASS
+
+Notes
+-----
+1. The runtime values above are from the included run in this environment and should be rerun on the paper's experimental machine before publication.
+2. LB gap is (C_ALG - LB) / LB * 100%, not a Gurobi MIP gap.
+3. All three algorithms use the exact same fixed 10000-job instance.
