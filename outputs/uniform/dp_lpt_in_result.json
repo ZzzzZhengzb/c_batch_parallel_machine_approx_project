@@ -1,0 +1,43 @@
+{
+  "algorithm": "DP-LPT-IN",
+  "parameters": {
+    "n": 10000,
+    "m": 4,
+    "b": 5,
+    "alpha": 0.2,
+    "beta": 1.2
+  },
+  "makespan": 5587.2,
+  "LB": 3516.6059999999998,
+  "LB_gap_percent": 58.88046599476883,
+  "runtime_seconds": 0.19734550011344254,
+  "machine_loads": [
+    5587.2,
+    4205.599999999999,
+    3004.0,
+    1269.624
+  ],
+  "num_batches": 10,
+  "average_batch_size": 1000.0,
+  "max_batch_size": 3100,
+  "metadata": {
+    "global_dp_objective": 14066.423999999999,
+    "global_dp_runtime": 0.19692540005780756,
+    "global_dp_batch_count": 10,
+    "global_dp_candidate_count": 17335000
+  },
+  "validation": {
+    "validation_passed": true,
+    "assignment_ok": true,
+    "interval_violations": 0,
+    "q_mismatches": 0,
+    "empty_batches": 0,
+    "objective_ok": true,
+    "reconstructed_makespan": 5587.2,
+    "reported_makespan": 5587.2,
+    "max_machine_load": 5587.2,
+    "min_machine_load": 1269.624,
+    "total_batches": 10,
+    "total_jobs_seen": 10000
+  }
+}

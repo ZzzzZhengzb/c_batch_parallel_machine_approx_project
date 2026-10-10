@@ -1,0 +1,16 @@
+{
+  "distribution": "uniform",
+  "seed": 42,
+  "n": 10000,
+  "m": 4,
+  "b": 5,
+  "alpha": 0.2,
+  "beta": 1.2,
+  "single_machine_DP": 14066.423999999999,
+  "q_max": 9.46,
+  "LB": 3516.6059999999998,
+  "reference_dp_runtime_seconds": 0.20675559993833303,
+  "reference_dp_num_batches": 10,
+  "reference_dp_candidate_count": 17335000,
+  "note": "Reference-LB runtime is not included in any approximation algorithm runtime."
+}

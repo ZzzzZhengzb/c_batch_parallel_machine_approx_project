@@ -1,0 +1,63 @@
+{
+  "algorithm": "LPT-DP-IN",
+  "parameters": {
+    "n": 10000,
+    "m": 4,
+    "b": 5,
+    "alpha": 0.2,
+    "beta": 1.2
+  },
+  "makespan": 3552.604,
+  "LB": 3516.6059999999998,
+  "LB_gap_percent": 1.0236574697307588,
+  "runtime_seconds": 0.17032309994101524,
+  "machine_loads": [
+    3552.6040000000003,
+    3552.6040000000003,
+    3552.6040000000003,
+    3552.6040000000003
+  ],
+  "num_batches": 28,
+  "average_batch_size": 357.14285714285717,
+  "max_batch_size": 825,
+  "metadata": {
+    "temporary_q_loads": [
+      17500.999999999975,
+      17500.999999999975,
+      17500.999999999975,
+      17500.999999999975
+    ],
+    "machine_dp_objectives": [
+      3552.604,
+      3552.604,
+      3552.604,
+      3552.604
+    ],
+    "machine_dp_runtimes": [
+      0.03667689999565482,
+      0.03966649994254112,
+      0.04102720017544925,
+      0.03789240005426109
+    ],
+    "machine_dp_candidate_counts": [
+      1084375,
+      1084375,
+      1084375,
+      1084375
+    ]
+  },
+  "validation": {
+    "validation_passed": true,
+    "assignment_ok": true,
+    "interval_violations": 0,
+    "q_mismatches": 0,
+    "empty_batches": 0,
+    "objective_ok": true,
+    "reconstructed_makespan": 3552.6040000000003,
+    "reported_makespan": 3552.604,
+    "max_machine_load": 3552.6040000000003,
+    "min_machine_load": 3552.6040000000003,
+    "total_batches": 28,
+    "total_jobs_seen": 10000
+  }
+}

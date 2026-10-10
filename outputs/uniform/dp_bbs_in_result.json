@@ -1,0 +1,48 @@
+{
+  "algorithm": "DP-BBS-IN",
+  "parameters": {
+    "n": 10000,
+    "m": 4,
+    "b": 5,
+    "alpha": 0.2,
+    "beta": 1.2
+  },
+  "makespan": 4748.192,
+  "LB": 3516.6059999999998,
+  "LB_gap_percent": 35.02200701471818,
+  "runtime_seconds": 0.20847430010326207,
+  "machine_loads": [
+    4747.664,
+    4748.192,
+    4583.3679999999995,
+    0
+  ],
+  "num_batches": 12,
+  "average_batch_size": 833.3333333333334,
+  "max_batch_size": 3000,
+  "metadata": {
+    "global_dp_objective": 14066.423999999999,
+    "global_dp_runtime": 0.19942059996537864,
+    "global_dp_batch_count": 10,
+    "global_dp_candidate_count": 17335000,
+    "LB": 3516.6059999999998,
+    "delta": 0.8,
+    "lambda": 0.3500000000000001,
+    "threshold_T": 4747.4181,
+    "split_count": 2
+  },
+  "validation": {
+    "validation_passed": true,
+    "assignment_ok": true,
+    "interval_violations": 0,
+    "q_mismatches": 0,
+    "empty_batches": 0,
+    "objective_ok": true,
+    "reconstructed_makespan": 4748.192,
+    "reported_makespan": 4748.192,
+    "max_machine_load": 4748.192,
+    "min_machine_load": 0.0,
+    "total_batches": 12,
+    "total_jobs_seen": 10000
+  }
+}
