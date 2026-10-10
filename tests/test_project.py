@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+from openpyxl import load_workbook
 
 from algorithms import solve_dp_bbs_in, solve_dp_lpt_in, solve_lpt_dp_in
 from config import DEFAULT_CONFIG, ValidationConfig, generate_q_types, make_config
@@ -8,9 +12,23 @@ from fixed_instance import build_fixed_instance, validate_instance
 from models import Job
 from single_machine_dp import solve_single_machine_dp
 from validator import validate_algorithm_result
+from excel_writer import write_table_workbook
 
 
 class ProjectTests(unittest.TestCase):
+    def test_table_workbook_replaces_legacy_csv(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            csv_path = Path(temp_dir) / "summary.csv"
+            csv_path.write_text("value\n1\n", encoding="utf-8")
+            xlsx_path = write_table_workbook(
+                Path(temp_dir) / "summary.xlsx", [{"value": 1}], "Summary"
+            )
+            self.assertTrue(xlsx_path.exists())
+            self.assertFalse(csv_path.exists())
+            workbook = load_workbook(xlsx_path, read_only=True)
+            self.assertEqual(workbook["Summary"]["A2"].value, 1)
+            workbook.close()
+
     def test_reproducible_distribution_generation(self) -> None:
         for distribution in ("normal", "uniform"):
             first = generate_q_types(distribution, seed=42)

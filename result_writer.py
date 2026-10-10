@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import csv
 import json
 from pathlib import Path
 
 from config import ValidationConfig
+from excel_writer import write_table_workbook
 from models import AlgorithmResult
 
 
@@ -43,19 +43,8 @@ def write_algorithm_outputs(
                 "job_ids": " ".join(map(str, batch.job_ids)),
             })
 
-    with (out / f"{slug}_machines.csv").open("w", newline="", encoding="utf-8-sig") as f:
-        writer = csv.DictWriter(f, fieldnames=list(machine_rows[0].keys()))
-        writer.writeheader()
-        writer.writerows(machine_rows)
-
-    with (out / f"{slug}_batches.csv").open("w", newline="", encoding="utf-8-sig") as f:
-        fieldnames = [
-            "algorithm", "machine_id", "batch_position", "source_label", "size",
-            "min_q", "max_q", "processing_time", "job_ids"
-        ]
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(batch_rows)
+    write_table_workbook(out / f"{slug}_machines.xlsx", machine_rows, "Machines")
+    write_table_workbook(out / f"{slug}_batches.xlsx", batch_rows, "Batches")
 
     payload = {
         "algorithm": result.algorithm,
@@ -81,12 +70,5 @@ def write_algorithm_outputs(
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
-def write_summary_csv(path: str | Path, rows: list[dict]) -> None:
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if not rows:
-        return
-    with path.open("w", newline="", encoding="utf-8-sig") as f:
-        writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
-        writer.writeheader()
-        writer.writerows(rows)
+def write_summary_table(path: str | Path, rows: list[dict]) -> Path:
+    return write_table_workbook(Path(path).with_suffix(".xlsx"), rows, "Summary")

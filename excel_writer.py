@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import csv
-import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable, Mapping
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -13,37 +11,6 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 HEADER_FILL = PatternFill("solid", fgColor="1F4E78")
 HEADER_FONT = Font(name="Arial", size=10, bold=True, color="FFFFFF")
 BODY_FONT = Font(name="Arial", size=10, color="222222")
-INTEGER_COLUMNS = {"n", "m", "b", "machine_id", "batch_position", "size", "quantity", "type_id",
-                   "num_batches", "num_jobs", "total_batches", "max_batch_size", "split_count"}
-TEXT_COLUMNS = {"algorithm", "source_label", "job_ids", "validation_passed", "note", "distribution"}
-
-
-def _typed(value: str, header: str) -> Any:
-    if value == "" or header in TEXT_COLUMNS:
-        return value
-    try:
-        return int(value) if header in INTEGER_COLUMNS else float(value)
-    except ValueError:
-        return value
-
-
-def _read_csv(path: Path) -> list[list[Any]]:
-    with path.open(newline="", encoding="utf-8-sig") as handle:
-        rows = list(csv.reader(handle))
-    if not rows:
-        return []
-    headers = rows[0]
-    return [headers] + [[_typed(value, headers[index]) for index, value in enumerate(row)] for row in rows[1:]]
-
-
-def _flatten(prefix: str, value: Any, target: dict[str, Any]) -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            _flatten(f"{prefix}.{key}" if prefix else key, child, target)
-    elif isinstance(value, list):
-        target[prefix] = ", ".join(str(item) for item in value)
-    else:
-        target[prefix] = value
 
 
 def _style_sheet(sheet, table_name: str) -> None:
@@ -74,49 +41,28 @@ def _style_sheet(sheet, table_name: str) -> None:
         sheet.add_table(table)
 
 
-def _add_rows(workbook: Workbook, name: str, rows: list[list[Any]], table_name: str) -> None:
-    sheet = workbook.create_sheet(name)
-    for row in rows:
-        sheet.append(row)
-    _style_sheet(sheet, table_name)
+def write_table_workbook(
+    path: str | Path,
+    rows: Iterable[Mapping[str, Any]],
+    sheet_name: str,
+) -> Path:
+    """Write one former CSV output as one formatted Excel table."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    records = list(rows)
+    if not records:
+        return path
 
-
-def write_excel_workbook(output_dir: str | Path, types_csv: str | Path) -> Path:
-    output_dir = Path(output_dir)
-    distribution = output_dir.name
     workbook = Workbook()
-    workbook.remove(workbook.active)
-
-    _add_rows(workbook, "Summary", _read_csv(output_dir / "validation_summary.csv"), "SummaryTable")
-    _add_rows(workbook, "Types", _read_csv(Path(types_csv)), "TypesTable")
-
-    reference = json.loads((output_dir / "reference_lower_bound.json").read_text(encoding="utf-8"))
-    _add_rows(workbook, "Reference LB", [["metric", "value"], *reference.items()], "ReferenceTable")
-
-    algorithms = ("dp_lpt_in", "lpt_dp_in", "dp_bbs_in")
-    machine_rows: list[list[Any]] = []
-    batch_rows: list[list[Any]] = []
-    detail_records: list[dict[str, Any]] = []
-    for algorithm in algorithms:
-        machines = _read_csv(output_dir / f"{algorithm}_machines.csv")
-        batches = _read_csv(output_dir / f"{algorithm}_batches.csv")
-        if not machine_rows:
-            machine_rows.append(machines[0])
-        machine_rows.extend(machines[1:])
-        if not batch_rows:
-            batch_rows.append(batches[0])
-        batch_rows.extend(batches[1:])
-        flattened: dict[str, Any] = {}
-        payload = json.loads((output_dir / f"{algorithm}_result.json").read_text(encoding="utf-8"))
-        _flatten("", payload, flattened)
-        detail_records.append(flattened)
-
-    _add_rows(workbook, "Machines", machine_rows, "MachinesTable")
-    _add_rows(workbook, "Batches", batch_rows, "BatchesTable")
-    detail_headers = list(dict.fromkeys(key for record in detail_records for key in record))
-    detail_rows = [detail_headers] + [[record.get(key, "") for key in detail_headers] for record in detail_records]
-    _add_rows(workbook, "Algorithm Details", detail_rows, "DetailsTable")
-
-    path = output_dir / f"{distribution}_results.xlsx"
+    sheet = workbook.active
+    sheet.title = sheet_name
+    headers = list(records[0].keys())
+    sheet.append(headers)
+    for record in records:
+        sheet.append([record.get(header, "") for header in headers])
+    _style_sheet(sheet, f"{sheet_name.replace(' ', '')}Table")
     workbook.save(path)
+
+    # Remove the exact legacy CSV counterpart after its XLSX replacement exists.
+    path.with_suffix(".csv").unlink(missing_ok=True)
     return path

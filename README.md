@@ -65,20 +65,16 @@ python run_validation.py --distribution uniform --seed 42
 Results are isolated under `outputs/normal/` and `outputs/uniform/`. Generated input
 data are written under `data/normal/` and `data/uniform/`.
 
-Each experiment also produces a formatted Excel workbook containing the summary,
-type data, reference lower bound, machine assignments, batch schedules, and detailed
-algorithm metrics on separate worksheets:
-
-- `outputs/normal/normal_results.xlsx`
-- `outputs/uniform/uniform_results.xlsx`
+Every tabular result is written directly as an individual formatted `.xlsx` file.
+The project does not emit CSV files in `outputs/`.
 
 ## Main outputs
 
-- `outputs/<distribution>/validation_summary.csv`: comparison of the three algorithms.
+- `outputs/<distribution>/validation_summary.xlsx`: comparison of the three algorithms.
 - `outputs/<distribution>/reference_lower_bound.json`: reference DP and LB.
 - `outputs/<distribution>/*_result.json`: detailed metrics for each algorithm.
-- `outputs/<distribution>/*_machines.csv`: per-machine summaries.
-- `outputs/<distribution>/*_batches.csv`: batch-level schedules.
+- `outputs/<distribution>/*_machines.xlsx`: per-machine summaries.
+- `outputs/<distribution>/*_batches.xlsx`: batch-level schedules.
 - `data/<distribution>/jobs.csv`: the generated 10000-job instance.
 - `data/<distribution>/types.csv`: the generated type values and quantities.
 
